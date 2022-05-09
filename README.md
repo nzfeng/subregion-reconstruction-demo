@@ -17,6 +17,20 @@ make -j8	# or however many cores you have
 bin/main <surface_mesh> <vertex_occupancy_file>
 ```
 
+# Data format
+The vertex information is a txt file. The file contains the indices of occupied vertices, each on a separate line, each preceded the char "v":
+
+```
+v 125
+v 109
+v 115
+v 132
+v 156
+...	# the rest of the file
+```
+
+The program handles duplicate entries.
+
 # Explanation of algorithm
 This demo is motivated by the desire to orient a set of vertices meant to represent the boundary of a region. A straightforward way of orienting such a set is to reconstruct the region, and let the orientation of the boundary be the one induced by the region.
 
