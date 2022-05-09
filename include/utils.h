@@ -20,5 +20,5 @@ using namespace geometrycentral::surface;
 
 void readVertexSet(SurfaceMesh& mesh, const std::string& filename, std::set<Vertex>& vertexSet);
 
-void displayMeshSubset(const MeshSubset& S, SurfaceMesh& mesh, VertexPositionGeometry& geometry,
-                       polyscope::SurfaceMesh* psMesh);
+void displayMeshSubset(const std::string& name, const MeshSubset& S, SurfaceMesh& mesh,
+                       VertexPositionGeometry& geometry, polyscope::SurfaceMesh* psMesh);

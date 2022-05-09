@@ -33,8 +33,8 @@ MeshSubset SUBSET;
 void functionCallback() {
 
     if (ImGui::Button("Test")) {
-        growDisk(SUBSET);
-        displayMeshSubset(SUBSET, *mesh, *geometry, psMesh);
+        MeshSubset S = determineDiskRegion(*mesh, VERTEX_SET);
+        displayMeshSubset("S", S, *mesh, *geometry, psMesh);
     }
 }
 
@@ -59,7 +59,7 @@ int main(int argc, char** argv) {
 
     // If a mesh name was not given, use default mesh.
     std::string meshFilepath = "../data/bunny.obj";
-    std::string vertexFilepath = "../data/bunny-vertices.txt";
+    std::string vertexFilepath = "../data/bunny-disk.txt";
     if (meshFilename) {
         meshFilepath = args::get(meshFilename);
     }
@@ -88,6 +88,7 @@ int main(int argc, char** argv) {
     readVertexSet(*mesh, vertexFilepath, VERTEX_SET);
 
     SUBSET.vertices = VERTEX_SET;
+    displayMeshSubset("V", SUBSET, *mesh, *geometry, psMesh);
 
     // Give control to the polyscope gui
     polyscope::show();

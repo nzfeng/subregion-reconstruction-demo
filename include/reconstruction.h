@@ -12,4 +12,4 @@
 using namespace geometrycentral;
 using namespace geometrycentral::surface;
 
-void growDisk(MeshSubset& subset);
+MeshSubset determineDiskRegion(SurfaceMesh& mesh, const std::set<Vertex>& vertex_set);

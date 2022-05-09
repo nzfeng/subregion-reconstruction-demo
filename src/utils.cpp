@@ -34,8 +34,8 @@ void readVertexSet(SurfaceMesh& mesh, const std::string& filename, std::set<Vert
 /*
  * Display the simplices in a MeshSubset.
  */
-void displayMeshSubset(const MeshSubset& S, SurfaceMesh& mesh, VertexPositionGeometry& geometry,
-                       polyscope::SurfaceMesh* psMesh) {
+void displayMeshSubset(const std::string& name, const MeshSubset& S, SurfaceMesh& mesh,
+                       VertexPositionGeometry& geometry, polyscope::SurfaceMesh* psMesh) {
 
     std::array<double, 3> POLYSCOPE_BLUE = {0.11, 0.388, 0.89};
     std::vector<Vector3> v_pos, e_pos;
@@ -58,7 +58,7 @@ void displayMeshSubset(const MeshSubset& S, SurfaceMesh& mesh, VertexPositionGeo
         fColor[geometry.faceIndices[f]] = {1.0, 0.0, 0.0};
     }
 
-    psMesh->addSurfaceGraphQuantity("S vertices", v_pos, v_edges)->setEnabled(true);
-    psMesh->addSurfaceGraphQuantity("S edges", e_pos, e_edges)->setEnabled(true);
-    psMesh->addFaceColorQuantity("S faces", fColor)->setEnabled(true);
+    psMesh->addSurfaceGraphQuantity(name + " vertices", v_pos, v_edges)->setEnabled(true);
+    psMesh->addSurfaceGraphQuantity(name + " edges", e_pos, e_edges)->setEnabled(true);
+    psMesh->addFaceColorQuantity(name + " faces", fColor)->setEnabled(true);
 }
