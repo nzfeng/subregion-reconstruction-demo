@@ -4,6 +4,10 @@ Given a set of vertices on a mesh that represent a (possibly sparse) sampling of
 ![teaser](images/teaser.png?raw=true)
 
 # Getting started
+Clone the repo, including the submodules:
+```
+git clone --recursive https://github.com/nzfeng/subregion-reconstruction-demo
+```
 
 This demo takes the following as input:
 * a mesh file, representing the surface
