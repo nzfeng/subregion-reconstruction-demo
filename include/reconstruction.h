@@ -13,3 +13,5 @@ using namespace geometrycentral;
 using namespace geometrycentral::surface;
 
 MeshSubset determineDiskRegion(SurfaceMesh& mesh, const std::set<Vertex>& vertex_set);
+
+std::vector<Vertex> getBoundaryVerticesFromFaceSet(SurfaceMesh& mesh, const std::set<Face>& face_set);

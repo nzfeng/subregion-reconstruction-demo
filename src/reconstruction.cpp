@@ -100,10 +100,63 @@ void updateVertexOccupancyData(const std::set<Vertex>& set, VertexData<bool>& vI
 }
 
 /*
+ * Assume the region is given as a densely-sampled set of faces (a 2-chain). Then the boundary is simply the boundary
+ * operator applied to the 2-chain. The vertices are then extracted by traveling around this chain in order.
+ */
+std::vector<Vertex> getBoundaryVerticesFromFaceSet(SurfaceMesh& mesh, const std::set<Face>& face_set) {
+
+    SparseMatrix<int> A = buildFaceEdgeAdjacencyMatrix(mesh); // |F| x |E|
+    SparseMatrix<int> B = A.transpose();
+
+    // Set up face vector
+    Vector<int> faceVector = Vector<int>::Zero(mesh.nFaces());
+    for (Face f : face_set) {
+        faceVector[f.getIndex()] = 1;
+    }
+
+    // Get the boundary
+    Vector<int> edgeVector = B * faceVector;
+    // Get the halfedges
+    std::vector<Halfedge> bHalfedges;
+    for (Edge e : mesh.edges()) {
+        int c = edgeVector[e.getIndex()];
+        if (c > 0) {
+            bHalfedges.push_back(e.halfedge());
+        } else if (c < 0) {
+            bHalfedges.push_back(e.halfedge().twin());
+        }
+    }
+
+    // Now hook up all these (oriented) edges.
+    std::vector<Halfedge> boundary; // halfedges in order
+    boundary.push_back(bHalfedges[0]);
+    while (boundary.size() < bHalfedges.size()) {
+        Halfedge lastHe = boundary[boundary.size() - 1];
+        for (Halfedge he : bHalfedges) {
+            if (he.tailVertex() == lastHe.tipVertex()) {
+                boundary.push_back(he);
+                break;
+            }
+        }
+    }
+
+    // Now get the vertices
+    std::vector<Vertex> vertices;
+    for (Halfedge he : boundary) {
+        vertices.push_back(he.tailVertex());
+    }
+    return vertices;
+}
+
+/*
  * Assume for now that the region doesn't have any holes. Grow the regions until there is only a single boundary loop.
  * Then start removing faces. Remove faces only if (1) they are not adjacent to more than 1 vertex in the vertex set;
  * (2) removing it does not cause any vertex in the vertex set to be isolated; (3) that removing them does not induce
  * another boundary loop.
+ *
+ * TODO: Still not perfect. In particular, (2) + the other conditions can cause spurious small components that don't
+ * contain any vertices but are still attached to the region. On the other hand, removal of (2) results in the
+ * occasional isolated vertex.
  */
 MeshSubset determineDiskRegion(SurfaceMesh& mesh, const std::set<Vertex>& vertex_set) {
 
